@@ -2,7 +2,7 @@ const siteMetadata = {
   title: 'Sina talks',
   author: 'sinasafari',
   headerTitle: '',
-  description: "sina's personal weblog and portfolio.",
+  description: 'there should be something you find useful',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://www.sinasafari.com',
