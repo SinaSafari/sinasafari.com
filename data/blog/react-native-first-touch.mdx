@@ -1,47 +1,47 @@
 ---
 title: 'React native - first touch'
 date: '2021-07-30'
-lastmod: '2021-07-30'
+lastmod: '2021-08-02'
 tags: ['react', 'react-native', 'android', 'ios']
 draft: false
-summary: "I used react native for first time to develop an enterprise application. here's my thoughts."
+summary: 'I used react native for the first time to develop an enterprise application. here are my thoughts.'
 authors: ['default']
 ---
 
-about a month age, one of my colleagues (who is a senior iOS developer) asked me if I have some experiences in cross platform mobile app development. I've been watched some react native tutorial and I haven't even exported apks, so I responsed YES! then I got introduced to an application which had complex ui as well as device related features like woking with geoloation data or using databased, etc. I should mention that there was limited time and the reason the client wanted this application to be developed using cross platform tools, was that they wanted it as soon as possible.
+about a month ago, one of my colleagues (who is a senior iOS developer) asked me if I have some experience in cross-platform mobile app development. I've been watching some react native tutorials and I haven't even exported APKs, so I responded YES! then I got introduced to an application that had complex UI as well as device-related features like working with geolocation data or using databased, etc. I should mention that there was limited time and the reason the client wanted this application to be developed using cross-platform tools, was that they wanted it as soon as possible.
 
-after 2 weeks of development, and about another week for applying some other changes and fixing alpha and beta versions bugs, the application got ready for limited number of customers.
+after 2 weeks of development, and about another week of applying some other changes and fixing alpha and beta version bugs, the application got ready for a limited number of customers.
 
 now, I want to share my thoughts over react native as a developer who used it for the first time, but, for developing an enterprise application. hope you find these useful!
 
-## OK. Where the start line?
+## OK. Where's the start line?
 
-first step is to make your computer ready for android/ios developing with react native. first of all, I did not feel good about expo because I was thinking that the final bundle size if going to be masive so I chose react-native-cli for generate and manage application.
+the first step is to make your computer ready for android/ios development with react native. first of all, I did not feel good about expo because I was thinking that the final bundle size is going to be massive so I chose react-native-cli to generate and manage application.
 
-I work on a linux machine so I had to prepare my computer for android app development by installing JDK, android SDK, and android virtual device. although I used android studio for installing SDKs and AVD, but I had to set all of environment variables manually. setting those could be a little tricky but it's not that complecated.
+I work on a Linux machine so I had to prepare my computer for android app development by installing JDK, Android SDK, and android virtual device. although I used android studio for installing SDKs and AVD, I had to set all of the environment variables manually. setting those could be a little tricky but it's not that complecated.
 
-after all, the process of setting up the computer for android developement is not enjoyable and definitely not beginner friendly. as the react native docs sais:
+after all, the process of setting up the computer for android development is not enjoyable and beginner friendly. as the react native docs said:
 
 > If you already have one of these tools installed, you should be able to get up and running within a few minutes. If they are not installed, you should expect to spend about an hour installing and configuring them.
 
-by the way, I prefer using typescript in all of my projects, so I installed the `react-native-template-typesctipt`.
+by the way, I prefer using typescript in all of my projects, so I installed the `react-native-template-typescript.
 
-## Believe me, there will be a lot dependencies.
+## Believe me, there will be a lot of dependencies.
 
-according to a couple of famous memes, heaviest object in universe is `node_modules` directory in a js based project. as a javascript developer, I'm strongly agreed. almost all of js based applications depends on tons of 3rd party packages, and react native is not an exception. and it's not just npm dependencies. there are some other build time deps like hermes, which is a js engine specifically for react native code and you should bring it.
+according to a couple of famous memes, the heaviest object in the universe is the `node_modules` directory in a js-based project. as a javascript developer, I'm strongly agreed. almost all js-based applications depend on tons of 3rd party packages and react native is not an exception. and it's not just npm dependencies. there are some other build-time dependencies like Hermes, which is a js engine specifically for react native code and you should bring it.
 
-there are some common 3rd party packages that I think are necassary for all applications. and react native does not provide us these features. some of them are:
+there are some common 3rd party packages that I think are necessary for all applications. and react native does not provide us with these features. some of them are:
 
 - `react-navigation` - for routing and navigation
-- `AsyncStorage` - something like localStorage but in mobile app
-- `@reduxjs/toolkit` - althought we have context for global state management, but redux is more suitable for most cases
-- `axios`, `react-query` - fetch api is available in react native, but..., come on!
+- `AsyncStorage` - something like localStorage but in a mobile app
+- `@reduxjs/toolkit` - although we have context for global state management, redux is more suitable for most cases
+- `axios`, `react-query` - fetch API is available in react native, but..., come on!
 
-the list does not end here, but I tries for mention really necessary dependencies.
+the list does not end here, but I try to mention really necessary dependencies.
 
 ## AH! I hate UI!
 
-managing ui in react native is not pleasant. at least I can sat it's not pleasant to me. for example:
+managing UI in react native is not pleasant. at least I can say it's not pleasant to me. for example:
 
 ```tsx
 import React from 'react';
@@ -68,8 +68,8 @@ export const SomeComponent: React.FunctionComponent = () => {
 }
 ```
 
-it's not like we have to write a ton of repetitive styles for different element. there's array based styles, which you can pass array of styles and they will be combined together. but I think it's not the fastest way to create ui in react native.
-so I look for libraries and frameworks for implementing ui in react native.
+it's not like we have to write a ton of repetitive styles for a different element. there are array-based styles, in which you can pass an array of styles and they will be combined. but I think it's not the fastest way to create UI in react native.
+so I look for libraries and frameworks for implementing UI in react native.
 
 I think native base is the best option amongst other tools and libraries. its API is very similar to chakra-ui, material-ui, or mantine (none of them are compatible with react native) and it's highly customizable and easy to use.
 
@@ -90,16 +90,16 @@ export const SomeComponent: React.FunctionComponent = () => {
 }
 ```
 
-I think it's better way to implement ui. BTW, this is only my opinion.
+I think it's a better way to implement UI. BTW, this is only my opinion.
 
 **animations:**
-also for aimations, here in react native, we do not use animations using css properties. instead we should us `Animated` library form `react-native`. and it's not otimized that way, because the ui animation is controlled by javascript, throgh bridge, so long story short, there is old js problem here too: 'we are single threaded so we have to keep the main theared free as much as possible'. there is another library for doing these kind of tasks more efficiantly: [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/). deffinately it's a better approach.
+also for animations, here in react native, we do not use animations using CSS properties. instead, we should use the `Animated` library form `react-native`. and it's not optimized that way, because the UI animation is controlled by javascript, through bridge, so long story short, we have the old js problem here too: 'we are single threaded so we have to keep the main thread free as much as possible. there is another library for doing this kind of task more efficiently: [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/). it's a better approach.
 
 ## Where is version one?
 
-react native has been there since 2015, and yet in 2022, we do not have version `1.0` and the latest version in mid 2022 is `0.69`. so can we connclude that react native is not stable? the answer is yes and no at the same time.
+react-native has been there since 2015, and yet in 2022, we do not have version `1.0` and the latest version in mid-2022 is `0.69`. so can we conclude that react native is not stable? the answer is yes and no at the same time.
 
-**By the way it does not mean that react native is not stable.** it means it's under development. there are changes in core architecture like new NativeModule system (TurboModule) and the new Renderer (Fabric). I'm not going to investigate the difference between these two architectures, but in general, the differences are something like these:
+**By the way it does not mean that react native is not stable.** it means it's under development. there are changes in core architecture like the new NativeModule system (TurboModule) and the new Renderer (Fabric). I'm not going to investigate the difference between these two architectures, but in general, the differences are something like these:
 
 **_current architecture:_** (including bridge and native modules)
 
@@ -117,25 +117,25 @@ react native has been there since 2015, and yet in 2022, we do not have version 
 
 ## Just js? nothing else?
 
-I am going to disapoint you. it's not like writing js and that's it, we have ready to use iOS and Android app. there are a lot of use cases that we should change some native code in both java and objective-c which is not consider as a good experience. because I do not feel ok with does languages and frankly, js feels home, other languages are just a bit weird. specifically objective-c. but these changes are mostly just configuration and adding just one line of code. there's no development in native languages.
+I am going to disappoint you. it's not like writing js and that's it, we have ready-to-use iOS and Android app. there are a lot of use cases that we should change some native code in both java and objective-c which is not considered a good experience. because I do not feel ok with languages and frankly, js feels like home, other languages are just a bit weird. specifically objective-c. but these changes are mostly just configuration and adding just one line of code. there's no development in native languages.
 
-for example, permissions in android should be handled in `AndroidManifest.xml` and `info.plist`. or setting up `react-navigation` requires adding some lines of code in `MainActivity.java`. in iOS side, most of the things will be handled just by running `npx pod-install ios` but in android sometimes it should be challenging.
+for example, permissions in android should be handled in `AndroidManifest.xml` and `info.plist`. or setting up `react-navigation` requires adding some lines of code in `MainActivity.java`. in the iOS side, most of the things will be handled just by running `npx pod-install ios` but in android sometimes it should be challenging.
 
 ## Myth: no native feature in react native
 
-that's completely wrong. In this application I used device geolocation (for using in map), and user fingerprint in local authentication. there are other libraries that make it possible to use device native features like [camera](https://mrousavy.com/react-native-vision-camera/), [voice recorder](https://www.npmjs.com/package/react-native-audio-recorder-player), [sensors](https://react-native-sensors.github.io/), [contacts](https://github.com/morenoh149/react-native-contacts), [phone calls](https://github.com/react-native-webrtc/react-native-callkeep) etc.
+that's completely wrong. In this application, I used device geolocation (for using in the map parts), and user fingerprint in local authentication. there are other libraries that make it possible to use device native features like [camera](https://mrousavy.com/react-native-vision-camera/), [voice recorder](https://www.npmjs.com/package/react-native-audio-recorder-player), [sensors](https://react-native-sensors.github.io/), [contacts](https://github.com/morenoh149/react-native-contacts), [phone calls](https://github.com/react-native-webrtc/react-native-callkeep) etc.
 
-also you can load you tensorflow lite models directly on device using [react-native-tensorflow-lite](https://github.com/swittk/react-native-tensorflow-lite) (which is iOS only, but I'm sure there's some other library that provide this feature for android systems too) or pytorch using [react-native-pytorch-core](https://www.npmjs.com/package/react-native-pytorch-core).
+also, you can load your TensorFlow lite models directly on the device using [react-native-tensorflow-lite](https://github.com/swittk/react-native-tensorflow-lite) (which is iOS only, but I'm sure there's some other library that provides this feature for android systems too) or Pytorch using [react-native-pytorch-core](https://www.npmjs.com/package/react-native-pytorch-core).
 
-I did not face any serious limitation and barrier, so forget about these myths.
+I did not face any serious limitations or barriers, so forget about these myths.
 
 ## Last word. will I use it again?
 
 well, let's discuss it a bit.
 
-react native is hard begin with, especially in comparison to its powerful rival, flutter. I have practical experiences in flutter android app development too, but as javascript developer, I always prefer using js based tools.
-the development experience, is a really valuable feature for react native. it also make rapid development possible. and one the most important feature of js world, is its great community. you can find a lot of libraries, and your questions has already been answered in stackoverflow maybe years ago, so you won't be stuck in some problem for a long time.
+react-native is hard, in the beginning, especially in comparison to its powerful rival, flutter. I have practical experience in flutter android app development too, but as a javascript developer, I always prefer using js based tools.
+the development experience is a really valuable feature for react native. it also makes rapid development possible. and one of the most important features of the js world is its great community. you can find a lot of libraries, and your questions have already been answered in StackOverflow maybe years ago, so you won't be stuck in some problem for a long time.
 
-It wasn't an easy journey at the beginning, but as I progressed in project and find how to ask google about my react native problems (believe me, it's important), It got better and better. **and yes. I'm going to use it again**. I'm thrilled to see finallized version of new architecture. it looks promising.
+It wasn't an easy journey at the beginning, but as I progressed in the project and find how to ask google about my react native problems (believe me, it's important), It got better and better. **and yes. I'm going to use it again**. I'm thrilled to see finalized version of the new architecture. it looks promising.
 
-thank you and have nice code!
+thank you and have a nice code!

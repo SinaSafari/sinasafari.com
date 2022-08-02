@@ -1,15 +1,15 @@
 ---
-title: 'Dynamic routes in react router dom'
+title: 'Dynamic routes in react-router-dom'
 date: '2021-07-29'
 lastmod: '2021-07-29'
 tags: ['react', 'react-router-dom']
 draft: false
-summary: 'generating routes using arrays and loops are cool, but it can be a little tricky using react router dom. here we are going to try implementing this.'
+summary: 'generating routes using arrays and loops is cool, but it can be a little tricky using react-router-dom. here we are going to try implementing this.'
 # images: ['/static/images/canada/mountains.jpg', '/static/images/canada/toronto.jpg']
 authors: ['default']
 ---
 
-where are we? in a simple react app, and we want to implement dynamic routes using objects in order to have a scalable router for the whole app.
+where are we? in a simple react app, we want to implement dynamic routes using objects to have a scalable router for the whole app.
 
 we assume we want to have these routes:
 
@@ -17,7 +17,7 @@ we assume we want to have these routes:
 - `/dashboard/posts`
 - `/dashboard/posts/:id`
 
-we can manage our route mapping by creating a nested objects arrays. we can generate types for this structure like this:
+we can manage our route mapping by creating nested objects and arrays. we can generate types for this structure like this:
 
 ```ts
 export type TRoute = {
@@ -41,7 +41,7 @@ export const SamplePage: React.FunctionComponent = () => {
 }
 ```
 
-now we can create our route object. this object can be nested object or be separeted based on the needs of the project. but the structure should follow the types we declared above.
+now we can create our route object. this object can be a nested object or be separated based on the needs of the project. but the structure should follow the types we declared above.
 for example, this is the mapping that we need for our app routes:
 
 ```ts
@@ -66,7 +66,7 @@ const routeList = {
 ```
 
 now we need a function to loop over our route mapping object and generate our routes.
-this function uses recursion and call itself based on the value it loops over.
+this function uses recursion and calls itself based on the value it loops over.
 
 ```tsx
 const buildRouteNavigation = (routes: Array<TRoute> | TRouteCollection): React.ReactNode => {
@@ -93,7 +93,7 @@ const buildRouteNavigation = (routes: Array<TRoute> | TRouteCollection): React.R
 }
 ```
 
-in the end, all we have to de is to put this function in right place (e.g. as children of `BrowserRouter`), and pass our route mapping object (in our example, `routeList`) to it.
+in the end, all we have to do is to put this function in right place (e.g. as children of `BrowserRouter`), and pass our route mapping object (in our example, `routeList`) to it.
 
 ```tsx
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -114,8 +114,8 @@ const App = () => {
 export default App
 ```
 
-this is a simple way of implementing dynamic routes in react-router-dom. this method will help us to make more modular code and also helps code spliting.
+this is a simple way of implementing dynamic routes in react-router-dom. this method will help us to make more modular code and also helps code splitting.
 
-by the way, this is not the end of process. there are a lot of things that we can implement using this method, like custom layout for each route.
+by the way, this is not the end of the process. there are a lot of things that we can implement using this method, like a custom layout for each route.
 
 hope you enjoyed it!
