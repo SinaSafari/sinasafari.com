@@ -1,0 +1,171 @@
+---
+title: 'React is the best'
+date: '2021-08-04'
+lastmod: '2021-08-04'
+tags: ['react', 'vue', 'angular', 'svelte']
+draft: false
+summary: 'I tried a lot of technologies and tools in web frontend development, and I believe nothing even gets close to react.'
+# images: ['/static/images/canada/mountains.jpg', '/static/images/canada/toronto.jpg']
+authors: ['default']
+---
+
+> saying `react is the best ` does not
+> mean other tools are bad. some phrases in this post may look insulting to other tools and frameworks, believe me, those sentences are just for fun.
+
+It's been about 5 years since I started using react.
+I used other popular frameworks in my career too, specifically Vue.
+but in my opinion, non of them was as cool as React is. in this post, I want to say why.
+
+## What is the main problem?
+
+simply it's about `separation of concerns `. each of these frameworks has its attitude about implementing this concept. but what are the concerns? one of the most challenging problems in web frontend development is synching data and UI.
+also, there are a lot of repetitive elements and functionality in web frontend projects.
+the other problem is that basically, we are dealing with 3 different syntaxes in web frontend development. `html`, `css`, and `javascript`/`typescript`.
+
+so, SPAs try to make these concerns separated (smaller chunks of code are easier to develop, debug, test, and maintain), and also make an efficient way to deal with them.
+
+so for summary, all the SPAs (single-page applications) try to:
+
+- guarantee that they will keep data and UI synchronous with the change events.
+- introduce an efficient mechanism for managing reusable components.
+- putting styles, templates, and logic together in a clean format.
+
+there are a lot more things that a SPA will do, but I think these three are enough to see the difference between different SPAs.
+now I'm going to implement a simple conditional rendering pattern in Vue, Angular, Svelete, and then React.
+let's see the code:
+
+## Angular. the oldest enemy
+
+angular is the oldest SPA on our list. but it does not mean that it's outdated. it means it's experienced.
+
+angular separates the concerns we discussed above, by the responsibility. also in a mean way, we can say by file extension. for each component, angular generates three files (and a file for testing).
+an HTML template file, a style CSS file, and a component file for merging templates, styles and logic. we should use directives inside `html` file for applying logic from `component` file.
+one example of these directives is `*ngIf` which is used in conditional rendering patterns, and we use that in the below example.
+
+```ts
+// some.component.ts
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'some-component',
+  templateUrl: './some.component.html',
+  styleUrls: ['./some.component.css'],
+})
+export class ExampleComponent {
+  show: boolean = true
+}
+```
+
+```css
+/* some.component.css */
+p {
+  text-decoration: underline;
+}
+```
+
+```html
+<!-- some.component.html -->
+<p *ngIf="show">I don't know, js told me I should be shown</p>
+```
+
+## Vue. the green one.
+
+Vue takes another approach. Vue has its special file extension named `.vue`. and it tries to keep the old way of organizing each part of a component by using `<script>`, `<style>`, `<template>` tags.
+also, like angular, it contains a lot of directives like `v-if` that we see in the below example. unlike angular, all the things that are related to a component exist in just one file.
+
+```html
+<div>
+  <div v-if="show">
+    <p>I don't know, js told me I should be shown</p>
+  </div>
+</div>
+
+<script>
+  export default {
+    data() {
+      return {
+        show: true,
+      }
+    },
+  }
+</script>
+
+<style scoped>
+  p {
+    text-decoration: underline;
+  }
+</style>
+```
+
+## Svelete. new kid in town.
+
+Svelete has the same method as Vue, but instead of directives, it uses some special way of applying different patterns. it uses a syntax similar to `handlebars` which is a template engine for nodejs.
+svelete is a template engine so this pattern or syntax is not a surprise.
+
+```tsx
+<script>
+  let show = false
+</script>
+
+{#if show}
+
+  <p>I don't know, js told me I should be shown</p>
+
+{/if}
+
+<style>
+  p {
+    text-decoration: underline;
+  }
+</style>
+```
+
+## React. here's the best.
+
+and here's the React. React uses JSX for integrating data with UI, and applying patterns. each component is a simple function that returns some UI elements.
+
+```tsx
+import React, { useState } from 'react'
+
+export const SomeComponent = () => {
+  const [show, setShow] = useState(false)
+
+  return (
+    <>
+      {show && (
+        <p style={{ textDecoration: "underline" }}>
+          I don't know, js told me I should be shown
+        </p>
+      )}
+    <>
+  )
+}
+```
+
+## let's compare them
+
+we do not compare them about how they keep UI and Data synchronous here, it's more technical than it looks. for short, Vue and react use VDOM (virtual DOM), and angular has its mechanism for rendering and updating dom nodes. we will discuss them another time.
+
+now let's compare them based on two other features of SPAs, components, and structures.
+
+**_Angular:_** Angular is great when you want to work in a team. it forces the team to follow its predefined pattern (by using its great CLI), and by separating concerns by their responsibilities, each aspect of a component can
+be developed by any member of a team, and other members can use that just by interfaces. **But**, it will get huge just by generating a couple of components. also, I think using js variables or functions
+using directives inside a template file, is going to be a little hard. I don't prefer working with strings as variables in a template. it's a little like magic.
+
+**_Vue:_** if you want to add a framework to an existing project, Vue is not the best option. I believe it's the only option. **But**, based on my experience, it's a bit challenging to use all power of typescript in vue.
+specifically with its directives and vuex (which is a tool for managing global states).
+
+**_Svelete:_** I don't have enough experience with svelte compared to other frameworks that we discussed in this article, but the first thing I noticed, was its state management solution. at first, it's cool to declare your variables with `let` and voila, they are reactive!
+but again, it's magic. by magic I mean it's hard to follow the data flow and there are a lot of things that are hidden and happen under the hood by the framework. it can be a simple way at the beginning, but it can be hard to follow when the app grows.
+bt the way, the community says that the way that svelete works, increase productivity and the 2022 StackOverflow survey tells us that it is one of the most loved web frameworks. at this moment, I have doubts about it.
+
+**_React:_** react uses JSX. and I think it is the feature that makes react valuable. as we discussed above, we have three different syntaxes in the frontend web development. JSX combined these three and the developer
+use javascript to develop `HTML` and `CSS` as well. we have all the HTML tags inside the JS files. directly, not as string. and we can apply styles using JS objects. also, we can use javascript in the template for applying rendering patterns.
+there are no directives. instead, we use javascript functions and expressions directly inside the template.
+
+## last word
+
+react point of view is that a component is an element on the screen. combination of the template, style, and functionality is a concern. react applies this philosophy in JSX by combining the syntax of `HTML`, `CSS`, and `JS`,
+Vue and Svelete use this approach as well, but the way that they connect the logic and UI, is not as interesting as the way react does that.
+
+there is no best tool for all projects and based on the requirements, we should choose the best option. in this post, I tried to imply that react way, is just more elegant. also, developers integrate their preferences in their choices as well, my preferences make me use React in every project!
