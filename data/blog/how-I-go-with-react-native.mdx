@@ -1,0 +1,146 @@
+---
+title: 'How I go with React Native'
+date: '2022-11-25'
+lastmod: '2022-11-25'
+tags: ['react-native']
+draft: false
+summary: "react-native has a massive community. let's see some required packages"
+authors: ['default']
+---
+
+![current architecture](/static/images/how-I-go-with-react-native/rn1.png)
+
+In the javascript world, there are more than a million tools and libraries for developing the smallest feature in your application.
+in the RN world, and in late 2022, I usually use these tools:
+
+## **Base project**
+
+although there are many templates in the community, I prefer the minimal and default `react-native init` with base `react-native-template-typescript` which is recommended in the official docs.
+the default template uses `flow` as a javascript type system extender. but, typescript is the most reliable and safe programming language with large community support for
+developing large-scale apps. so, typescript is always my choice over pure javascript and other tools.
+
+[`ignite`](https://github.com/infinitered/ignite) is a fine template too. the template is preconfigured with `expo` and `react-native-cli`. but I don't agree with some of their decisions. for example, using `mobx` and `apisause`.
+but I always use their template to use config files, etc. the sample app is configured so well.
+
+## **Networking**
+
+unless you are developing a calculator app or something like this, you will need some network access and API requests. in my opinion, `axios` is the best option for networking in any js-based application. `axios` is fully configurable, and it's easy to use compared to fetch API (which is the react-native default way).
+
+calling an API is not enough in most cases. caching (or keeping server-client data) and state management is important as well. although all of them can be handled completely manually, I prefer to use a 3rd-party package, which is well-tested and provides clean API.
+
+> There are only two hard things in Computer Science: cache invalidation and naming things.
+>
+> -- Phil Karlton
+
+`react-query` helps us to handle server-client caching (btw, cache revalidation is one of the hardest problems in computer engineering), and also helps us write asynchronous code like it's synchronous. I mean we can get data from an external resource (eg. API call) without writing a single `try catch` block, and without any manual state changing.
+
+another option is the `redux toolkit query` which is fully compatible with redux, but like redux itself, it requires boilerplate code. I prefer `react-query` for all the use cases.
+
+## **Routing**
+
+[react-navigation](https://github.com/react-navigation/react-navigation) is the best option for 99.9% of cases (that 0.1% is when you need to integrate react native with native code).
+it provides different navigation strategies, like `stack`, `drawer`, `tab`, etc.
+
+another option is [react-native-navigation](https://github.com/wix/react-native-navigation) which I haven't used yet but as the document says:
+
+> This is a popular alternative to React Navigation and may be a better fit for you if you are trying to integrate React Native into an existing large native app.
+
+## **State management**
+
+[redux-toolkit](https://github.com/reduxjs/redux-toolkit) is the famous option for managing the global state in react-native. but most of the time, the project does not need a huge global state. the application is divided into
+smaller modules that have their state. also, `redux-toolkit` still requires more boilerplate code in comparison to its rivals.
+I had similar issues and recently I tried [zustand](https://github.com/pmndrs/zustand) on my react-native project and I enjoyed it. I will choose it for my next project as well.
+`zustand` is so small and does not need a provider or wrapper component. so it can be local to a module.
+
+all server-client cache is handled by `react-qeury`, so only client-side states will be handled by the state manager tool (and in most cases, it's not an async action).
+so a small library like `zustand` looks better in my opinion.
+
+there's another option that is not as practical as `redux` and `zustand`, but I like it. `BLOC` is a state management pattern (not necessarily a global state) that is
+so popular in the flutter community. this pattern is based on reactive programming and streams. Felix Angelov made [bloc.js](https://github.com/felangel/bloc.js) that help us to implement this pattern.
+as I said, it may not be a suitable option for enterprise-level react-native applications, but definately it's a cool library.
+
+## **Database**
+
+for most applications, [AsyncStorage](https://github.com/react-native-async-storage/async-storage) works fine. also, you can use it with [redux-persist](https://github.com/rt2zz/redux-persist) or persist middleware of `zustand`.
+in this way, you won't even need to touch the `AsyncStorage`. my first choice as a database (or just a persistor tool) is `zustand` and `AsyncStorage`. this combination can solve storage issues most of the time.
+
+There's another option that I like to use in my next project. [WatermelonDB](https://nozbe.github.io/WatermelonDB/Installation.html) is a relational database that is powered by SQLite but is observable.
+also, `WatermelonDB` can be synchronized with a remote database which can be useful in most cases.
+
+## **UI**
+
+you may need nothing but react-native's `StyleSheet` module to completely style an application, but it is not easy and it may result in a log of repetitive style props.
+
+UI libraries and frameworks try to solve this repetition issue by creating predefined components. unlike web UI libraries (like material UI, or mantine), react-native UI libraries are not full of ready-to-use components. most of them are incomplete in comparison to web UI libraries. but I think [native-base](https://github.com/GeekyAnts/NativeBase) is the best option among them. `native-base` provides theming options and a lot of reusable and configurable components. `native-base` overrides all `react-native` default components (like `View`, `Flatlist`, etc) and let us give styles attributes as props to those components and elements. I love this feature. `native-base` is my number one option for my react-native projects.
+
+There's another option that I haven't used yet, but I think that it's a great option. [nativewind](https://github.com/marklawlor/nativewind) brings [tailwindcss](https://tailwindcss.com/) to react-native. some other libraries try to do the same, but I think `nativewind` looks better than the others.
+
+## **Animation**
+
+react-native provides an `Animated` API for developing animated UI components. but it's not the optimal way of animating elements. this is mostly related to the architecture of react-native and communication of the js thread and native thread.
+
+the solution is [react-native-reanimated](https://github.com/software-mansion/react-native-reanimated). `reanimated` helps us to create smooth and performant animations with minimal setup, with a lot of helpers, and is relatively easy to use. another useful library for handling gesture animations is [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler) which is defined as:
+
+> native-driven gesture management APIs for building the best possible touch-based experiences in React Native.
+>
+> _react-native-gesture-handler website_
+
+these two libraries are dependencies for some other libraries as well. for example, the `react-navigation` drawer requires this library to function.
+
+a high-level alternative to `react-native-reanimated` is [moti](https://github.com/nandorojo/moti). `moti` uses `reanimated` as its dependency and provides a high-level API for animations in react native. it looks like `framer-motion` on the web and provides similar APIs.
+
+another library that I want to try is [react-native-skia](https://github.com/Shopify/react-native-skia) which is not completely related to animations but I think this is the best section for mentioning it. it's a 2D graphical rendering engine that is popular for being used as a renderer engine in flutter. as the website says:
+
+> React Native Skia brings the Skia Graphics Library to React Native. Skia serves as the graphics engine for Google Chrome and Chrome OS, Android, Flutter, Mozilla Firefox, Firefox OS, and many other products.
+
+although using this library will increase bundle size up to 6MB in mobile apps, in some special cases might be a good option.
+
+## **Development and collaboration**
+
+my version control tool is `git` and `github` is the platform that my source code lives on. there are some other tools like [eslint](https://github.com/eslint/eslint) (for linting and setting some rules),
+[prettier](https://github.com/prettier/prettier) (for having the same code style between different editors and IDEs), [husky](https://github.com/typicode/husky) (for managing git hooks)
+
+having a code review and analysis tool in CI/CD pipeline can help developers to keep their code clean. some examples of these tools are [sonarqube](https://www.sonarqube.org/) and [embold](https://embold.io/).
+
+## **Testing**
+
+There's nothing better than [jest](https://github.com/facebook/jest) and [testing-library/react-native](https://testing-library.com/docs/react-native-testing-library/intro/) in react-native.
+these tools are suitable for unit and integration tests and they have great community support, utils, and helper functions.
+
+I haven't used it yet, but it seems [detox](https://wix.github.io/Detox/) is a fine e2e testing tool for react native. something like [cypress](https://www.cypress.io/) in the web.
+I think it's a little hard to configure, but in the end, it's really helpful.
+
+## **App build and versioning**
+
+for versioning builds, [react-native-version](https://github.com/stovmascript/react-native-version) beside [np](https://github.com/sindresorhus/np), is pretty helpful.
+
+since my remote code repository is github, the best way to handle CI/CD pipeline is [github actions](https://github.com/features/actions). using this tool (or any other tool like [gitlab-ci](https://docs.gitlab.com/ee/ci/), [circleci](https://circleci.com/), etc),
+you can automate linting, testing, building, and publishing apps. `github actions` has great community support. its best feature is that it's free.
+
+in my future projects, I want to try [ms appcenter](https://appcenter.ms/) and [fastlane](https://fastlane.tools/) as well. specifically `appcenter` looks pretty useful.
+
+## **Native features**
+
+native features like the Camera, Microphone, etc, are not necessary for all applications. but if they are likely to be used in one way or another. I used these libraries and they are pretty well-designed:
+
+### Camera
+
+for many years, [react-native-camera](https://github.com/react-native-camera/react-native-camera/tree/master) was a good option for using the camera in react-native but now it's deprecated. a good option is [react-native-camera-vision](https://github.com/mrousavy/react-native-vision-camera) which includes a set of well-designed API. also this library is more optimized than `react-native-camera`.
+
+### Map
+
+[react-native-maps](https://github.com/react-native-maps/react-native-maps) is the best option for handling location and maps in react native. you can use `openstreet`, `google maps`, `apple maps`, or any other tile overlay. also, it provides some good examples in its repository which covers most of the use cases.
+
+### Biometrics and Keychain
+
+[react-native-biometrics](https://github.com/SelfLender/react-native-biometrics) helps us to access functionalities like FaceID, TouchID, or any other biometric features that are available in the device. `react-native-biometrics` uses the device Keystore for biometric authentication. it's helpful when you develop an application that is security intensive.
+
+by the way, if you want to access the native device keychain, [react-native-keychain](https://github.com/oblador/react-native-keychain) is the right tool.
+
+## **Conclusion**
+
+these are some tools that I used in my previous projects or I intend to use in the future. but there are a lot of useful packages and libraries that I don't know, and
+they may provide even better solutions than the above ones. in my opinion, there's not a single best solution for a problem, and trying new tools, libraries, and approaches, always helped
+to think better about coding and finding solutions.
+
+**_I hope you found this text useful!_**
