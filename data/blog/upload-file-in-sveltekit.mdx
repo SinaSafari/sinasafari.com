@@ -1,0 +1,105 @@
+---
+title: 'upload file in sveltekit'
+date: '2023-01-14'
+lastmod: '2023-01-14'
+tags: ['sveltekit', 'typescript']
+draft: false
+summary: 'here we are going to upload a file in sveltekit and store it in static folder using api routes and form actions.'
+authors: ['default']
+---
+
+sveltekit is trending nowadays and I believe it totally deserves it. I tried it for one of my side projects and enjoyed it.
+
+sveltekit is a fullstack meta-framework for sveltejs that can handle almost everything we need for developing a web application. one of these features is file uploading and storing it to file system.
+for uploading images (or other types of files) in sveltekit, we have 2 options. form actions, and API routes.
+
+### _template_
+
+in `+page.svelte` we can create a form with `multipart/form-data` as its enctype. this form submits to an action handler (that we are to implement in a moment):
+
+```html
+<form action="?/avatar" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" placeholder="avatar" />
+  <button type="submit">upload</button>
+</form>
+```
+
+### _Action Handler_
+
+then we have to create an action handler in `+page.server.ts`. this file can be used for providing page initial data (by exporting a function named `load`) and defining form action handlers.
+note that as specified in `<form />` tag, the action name should be `avatar`.
+
+```ts
+import fs from 'fs/promises'
+import path from 'path'
+import { redirect } from '@sveltejs/kit'
+import type { PageLoad, Actions } from './$types'
+
+export const actions: Actions = {
+  avatar: async ({ request, route, url }) => {
+    try {
+      const data = Object.fromEntries(await request.formData())
+      const filePath = path.join(
+        process.cwd(),
+        'static',
+        'avatars',
+        `${crypto.randomUUID()}.${(data.avatar as Blob).type.split('/')[1]}`
+      )
+      await fs.writeFile(filePath, Buffer.from(await (data.avatar as Blob).arrayBuffer()))
+
+      // TODO: store the file path in database for further references.
+      throw redirect(303, url.pathname)
+    } catch (err) {
+      throw fail(500, { err: err })
+    }
+  },
+}
+```
+
+that's it! now the uploaded file will be stored in the static folder and it's accessible like other static assets.
+
+also, I used [crypto module](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) for naming files in the file system instead of the original file name, for having the same naming format for all files and removing long file names.
+
+note that this code is not completed logic. the path of the uploaded file should be stored in a persisted storage or database for further usage. also, errors should be handled properly.
+
+---
+
+## _API routes_
+
+the same functionality can be applied as an API route as well. forms should be submitted using javascript in this way. also if you have multiple clients besides your client-side sveltekit app (like a react-native mobile app) this approach is the one should choose.
+
+we can define API route endpoints in `+server.ts`. for specifying handlers for different HTTP methods (`GET`, `POST`, etc.) we can declare a function with the name of the HTTP verb. here we want a handler for
+
+```ts
+import path from 'path'
+import fs from 'fs/promises'
+import { fail, redirect } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
+
+export const POST = (async ({ request, url }) => {
+    try {
+        const data = Object.fromEntries(await request.formData())
+        const filePath = path.join(
+            process.cwd(),
+            "static",
+            "avatars",
+            `${crypto.randomUUID()}.${((data.avatar as Blob).type.split("/")[1])}`
+        );
+        await fs.writeFile(filePath, Buffer.from(await (data.avatar as Blob).arrayBuffer()))
+            // TODO: store the file path in database for further references.
+        return new Response(String({path: filePath}))
+    } catch (err) {
+        throw fail(500, { err: err })
+    }
+}) satisfies RequestHandler;
+```
+
+Note that in API routes the response body should be generated with `Response` object (which is global to typescript) so it's a little different from form actions.
+
+you can read more about the API routes in [sveltekit routing documentation](https://kit.svelte.dev/docs/routing#server).
+
+---
+
+Although this method works fine for small apps, storing assets and serving them through static path is not considered a best practice. it's not about sveltekit limitations, using an object storage service like Amazon S3 or MinIO is preferred for larger applications.
+
+hope you find this post useful!
