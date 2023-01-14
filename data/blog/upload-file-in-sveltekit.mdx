@@ -106,6 +106,32 @@ you can read more about the API routes in [sveltekit routing documentation](http
 
 ---
 
+after all, if you need to have static file serving, you should change `vite.config.js` in the root of the project a little:
+
+```js
+import { sveltekit } from '@sveltejs/kit/vite';
+import { searchForWorkspaceRoot } from 'vite'
+
+/** @type {import('vite').UserConfig} */
+const config = {
+	plugins: [sveltekit()],
+	server: {
+		fs: {
+			allow: [searchForWorkspaceRoot(process.cwd()), "/static/avatars/"]
+		}
+	},
+	test: {
+		include: ['src/**/*.{test,spec}.{js,ts}']
+	}
+};
+
+export default config;
+
+```
+
+
+---
+
 Although this method works fine for small apps, storing assets and serving them through static path is not considered a best practice. it's not about sveltekit limitations, using an object storage service like Amazon S3 or MinIO is preferred for larger applications.
 
 hope you find this post useful!
