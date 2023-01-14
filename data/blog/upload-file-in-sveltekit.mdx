@@ -1,5 +1,5 @@
 ---
-title: 'upload file in sveltekit'
+title: 'Upload file in sveltekit'
 date: '2023-01-14'
 lastmod: '2023-01-14'
 tags: ['sveltekit', 'typescript']
@@ -25,6 +25,12 @@ in `+page.svelte` we can create a form with `multipart/form-data` as its enctype
 ```
 
 ### _Action Handler_
+
+as the sveltekit documentation says:
+
+> actions allow you to POST data to the server using the `<form>` element.
+
+basically, they are functions that run on the server and are specifically designed for accepting form actions. you can read more about them in [sveltekit documentation](https://kit.svelte.dev/docs/form-actions)
 
 then we have to create an action handler in `+page.server.ts`. this file can be used for providing page initial data (by exporting a function named `load`) and defining form action handlers.
 note that as specified in `<form />` tag, the action name should be `avatar`.
